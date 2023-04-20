@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- bean 标签，将对象交给 IOC 容器管理   -->
+    <!--
+        scope="singleton" 单例（默认）
+        scope="prototype" 多例
+    -->
+    <bean id="helloworld" class="com.xd.pl.HelloWorld" scope="prototype"/>
+
+
+    <bean id="stu1" class="com.xd.pl.pojo.Student">
+        <!-- property 标签通过 setter 赋值 -->
+        <property name="sid"  value="1"/>
+        <property name="sname" value="zhangsan"/>
+        <property name="sgender" value="男"/>
+        <!-- ref 属性，通过 bean 的 id 引用 -->
+        <property name="scar" ref="bigCar"/>
+        <!-- 级联的方式，需要提前得到 scar，一般不用-->
+        <property name="scar.cprice" value="100"/>
+        <property name="hobbies">
+            <!-- 数组类型 -->
+            <array>
+                <value>sing</value>
+                <value>dance</value>
+                <value>rap</value>
+            </array>
+        </property>
+        <property name="teachers">
+            <map>
+                <!-- 字面量直接用key、value，对象用 key-ref、value-ref -->
+                <entry key="MathTeacher" value-ref="teacher1"/>
+                <entry key="EnglishTeacher" value-ref="teacher2"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="stu2" class="com.xd.pl.pojo.Student">
+        <!-- constructor-arg 标签通过构造器赋值 -->
+        <!-- 符合构造器顺序时，name 属性可以不写 -->
+        <constructor-arg value="2"/>
+        <constructor-arg name="sname">
+            <!-- CDATA 是 xml 中的特殊标签，其中的文本会被原样解析，用于处理特殊字符 -->
+            <value><![CDATA[<lisi?>]]></value>
+        </constructor-arg>
+        <constructor-arg name="sgender">
+            <!-- null 子标签赋空值 -->
+            <null/>
+        </constructor-arg>
+        <constructor-arg name="scar">
+            <!-- 内部 bean -->
+            <bean class="com.xd.pl.pojo.SmallCar">
+                <property name="cname" value="SBMW"/>
+                <property name="cprice" value="8000"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg name="hobbies">
+            <null/>
+        </constructor-arg>
+        <constructor-arg name="teachers" ref="teacherMap"/>
+    </bean>
+
+
+
+    <bean id="taxi" class="com.xd.pl.pojo.Taxi">
+        <property name="passengers" ref="passengerList">
+            <!-- 通过 list 赋值 -->
+<!--            <list>-->
+<!--                <ref bean="stu1"/>-->
+<!--                <ref bean="stu2"/>-->
+<!--            </list>-->
+        </property>
+    </bean>
+
+
+
+    <!-- 配置 list 类型的 bean，使用 util 的约束 -->
+    <util:list id="passengerList">
+        <ref bean="stu1"/>
+        <ref bean="stu2"/>
+    </util:list>
+
+    <!-- 配置 map 类型的 bean，使用 util 的约束 -->
+    <util:map id="teacherMap">
+        <entry key="MathTeacher" value-ref="teacher1"/>
+        <entry key="EnglishTeacher" value-ref="teacher2"/>
+    </util:map>
+
+    <bean id="teacher1" class="com.xd.pl.pojo.Teacher">
+        <property name="tid" value="1"/>
+        <property name="tname" value="hashimoto"/>
+    </bean>
+
+    <!-- p 命名空间的标签也可以为属性赋值 -->
+    <bean id="teacher2" class="com.xd.pl.pojo.Teacher" p:tid="2" p:tname="takahashi"/>
+
+
+    <bean id="smallCar" class="com.xd.pl.pojo.SmallCar">
+        <property name="cname" value="BMW"/>
+        <property name="cprice" value="1000"/>
+    </bean>
+
+    <bean id="bigCar" class="com.xd.pl.pojo.BigCar">
+        <property name="cname" value="WuLing"/>
+        <property name="cprice" value="10000"/>
+    </bean>
+
+</beans>

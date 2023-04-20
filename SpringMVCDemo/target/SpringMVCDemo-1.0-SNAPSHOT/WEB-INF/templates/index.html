@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<a th:href="@{/hi/hello}">to /hi/hello</a> <br>
+<a th:href="@{/hi/nihao(username='zhangsan', gender='男', age=28)}">to /hi/nihao</a>
+<!-- 报错 405：method not supported -->
+<form th:action="@{/hi/hello}" method="post">
+    <input type="submit" value="提交">
+</form>
+<br>
+<form th:action="@{/paramDemo/s}" method="post">
+    username: <label>
+    <input type="text" th:name="username"/>
+</label>
+    password: <label>
+    <input type="text" th:name="password"/>
+</label>
+    <input type="submit" value="登录">
+</form>
+<br>
+
+<form th:action="@{/paramDemo/p}" method="post">
+    username: <label>
+    <input type="text" th:name="name"/>
+</label>
+    password: <label>
+    <input type="text" th:name="password"/>
+</label>
+    <input type="submit" value="登录">
+</form>
+
+
+<form th:action="@{/paramDemo/pojo}" method="get">
+    username: <label>
+    <input type="text" th:name="username"/>
+</label>
+    password: <label>
+    <input type="text" th:name="password"/>
+</label>
+    <input type="submit" value="登录">
+</form>
+
+<a th:href="@{/mavtest/mav}">ModelAndView test</a> <br>
+<a th:href="@{/mavtest/model}">Model test</a> <br>
+<a th:href="@{/mavtest/modelMap}">modelMap test</a> <br>
+<a th:href="@{/mavtest/map}">Map test</a> <br>
+<br>
+<a th:href="@{test/view/tlv}">ThymeleafView test</a> <br>
+<a th:href="@{test/view/forward}">forwardView test</a> <br>
+<a th:href="@{test/view/redirect}">redirectView test</a> <br>
+<br>
+<!-- 默认只能发送 get 和 post 请求，故配置 HiddenHttpMethodFilter -->
+<form th:action="@{test/restful/put/2}" method="post">
+    <!-- 特殊的 input 更改请求类型，type="hidden" name="_method" -->
+    <input type="hidden" name="_method" value="put">
+    <input type="submit" value="put test">
+</form>
+<br>
+<a th:href="@{/to/test/ajax}">ajax test</a> <br>
+<br>
+
+<a th:href="@{testDown}">下载图片</a>
+<!-- 上传文件必须要设置 enctype="multipart/form-data" -->
+<form th:action="@{testUpload}" method="post" enctype="multipart/form-data">
+    上传图片：<input type="file" name="photo"><br>
+    <input type="submit" value="确定上传">
+</form>
+<a th:href="@{testException}">to Error</a>
+</body>
+</html>

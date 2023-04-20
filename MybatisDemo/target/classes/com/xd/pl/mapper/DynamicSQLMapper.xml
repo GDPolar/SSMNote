@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 与 mapper 文件全类名对应 -->
+<mapper namespace="com.xd.pl.mapper.DynamicSQLMapper">
+    <!-- 方法名与 id 对应   -->
+    <!-- if 标签当 test 表达式为 true 时，进行拼接     -->
+    <select id="getGoodByCondition1" resultType="Good">
+        select * from t_good where 1 = 1
+        <if test="goodName != null and goodName != ''">
+            good_name = #{goodName}
+        </if>
+        <if test="goodId != null">
+            and good_id = #{goodId}
+        </if>
+        <if test="goodPrice != null">
+            and good_price = #{goodPrice}
+        </if>
+        <if test="goodType != null">
+            and good_type = #{goodType}
+        </if>
+    </select>
+
+    <select id="getGoodByCondition2" resultType="Good">
+        select * from t_good
+        <!-- where 标签中会自动对 if 标签中内容请前多余的 and 进行处理 -->
+        <where>
+            <if test="goodName != null and goodName != ''">
+                good_name = #{goodName}
+            </if>
+            <if test="goodId != null">
+                and good_id = #{goodId}
+            </if>
+            <if test="goodPrice != null">
+                and good_price = #{goodPrice}
+            </if>
+            <if test="goodType != null">
+                and good_type = #{goodType}
+            </if>
+        </where>
+    </select>
+
+    <select id="getGoodByCondition3" resultType="Good">
+        select * from t_good
+        <!-- trim 标签自定义处理前缀后缀 -->
+        <trim prefix="where" suffixOverrides="and">
+            <if test="goodName != null and goodName != ''">
+                good_name = #{goodName} and
+            </if>
+            <if test="goodId != null">
+                good_id = #{goodId} and
+            </if>
+            <if test="goodPrice != null">
+                good_price = #{goodPrice} and
+            </if>
+            <if test="goodType != null">
+                good_type = #{goodType} and
+            </if>
+        </trim>
+    </select>
+
+    <select id="getGoodByCondition4" resultType="Good">
+        select * from t_good
+        <where>
+        <!-- choose 标签中多选一。其中的 when 相当于 if else，otherwise 相当于 else -->
+            <choose>
+                <!-- 如下多个 when 标签和 otherwise 标签只会执行一个 -->
+                <when test="goodName != null and goodName != ''">
+                    good_name = #{goodName}
+                </when>
+                <when test="goodId != null">
+                    good_id = #{goodId}
+                </when>
+                <when test="goodPrice != null">
+                    good_price = #{goodPrice}
+                </when>
+                <when test="goodType != null">
+                    good_type = #{goodType}
+                </when>
+            </choose>
+        </where>
+    </select>
+
+    <!-- foreach 批量添加 SQL -->
+    <insert id="insertManyGoods">
+        insert into t_good values
+        <foreach collection="goods" item="good" separator=",">
+            (#{good.goodId}, #{good.goodName}, #{good.goodPrice}, #{good.goodType})
+        </foreach>
+    </insert>
+
+    <delete id="deleteManyGoods">
+        delete from t_good where good_id in (
+        <foreach collection="goodIds"  item="good" separator=",">
+            #{good}
+        </foreach>
+        )
+    </delete>
+</mapper>

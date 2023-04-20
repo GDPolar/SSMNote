@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+ </head>
+<body>
+<script type="text/javascript" th:src="@{/js/axios.min.js}"></script>
+<script type="text/javascript" th:src="@{/js/vue.js}"></script>
+
+<div id="app">
+    <h1>test.html</h1>
+    <button @click="testAxios">ceshi</button>
+    <button @click="testAxios2">ceshi2</button>
+    <button @click="testResponseBody">ceshi3</button>
+</div>
+<script>
+    /*
+    * axios({
+    *   url:"",
+    *   method:"",
+    *   params:{}, // 以 name1=value&name2=value 的方式拼接到请求地址后发送的请求参数
+    *              // 故可通过 request.getParameter() 获取
+    *   data:{}    // 以 json 格式发送的请求参数，通过请求报文的形式传输到服务器
+    * }).then(response=>{
+    *   console.log(response.data);
+    * })
+    *
+    * */
+    var vue = new Vue({
+        el : "#app",
+        methods : {
+            testAxios() {
+                alert(111);
+                axios({
+                    method : "post",
+                    url : "/SpringMVCDemo_war_exploded/test/ajax?id=11",
+                    data : {"username":"hi", "password":"mima"},
+                    headers: {
+                        'content-type': "application/json"
+                    }
+                }).then(response=>{
+                    console.log(response.data);
+                });
+            },
+            testAxios2() {
+                axios.post(
+                    "/SpringMVCDemo_war_exploded/test/ajax2?id=11",
+                    {"username":"hi", "password":"mima"}
+                ).then(response=>{
+                    console.log(response.data);
+                });
+            },
+            testResponseBody() {
+                axios.post(
+                    "/SpringMVCDemo_war_exploded/test/ajax3",
+                    {"username":"hi", "password":"mima"}
+                ).then(response=>{
+                    console.log(response)
+                    console.log(response.data);
+                });
+            }
+
+        }
+    })
+</script>
+</body>
+</html>

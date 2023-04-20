@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- context:component-scan 实现自动扫描 -->
+    <!-- use-default-filters 默认为 true，指默认扫描包内的所有类 -->
+    <context:component-scan base-package="com.xd.pl">
+        <!-- type="annotation" 根据注解类型排除扫描，expression 为注解的全类名 -->
+        <!-- <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>-->
+
+        <!-- type="assignable" 根据类排除扫描，expression 为指定的类名 -->
+        <!-- <context:exclude-filter type="assignable" expression="com.xd.pl.controller.UserController"/>-->
+
+
+        <!-- use-default-filters 为 false 时，只扫描某类 -->
+        <!-- <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>-->
+    </context:component-scan>
+
+<!--    <bean id="userService" class="com.xd.pl.service.impl.UserServiceImpl"/>-->
+
+</beans>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 与 mapper 文件全类名对应 -->
+<mapper namespace="com.xd.pl.mapper.DeptMapper">
+    <!-- 方法名与 id 对应   -->
+    <select id="getDeptById" resultType="Dept">
+        select * from t_dept where dept_id = #{deptId}
+    </select>
+
+
+    <!-- 一对多关系，用 collection 标签 -->
+    <resultMap id="deptAndEmpResultMap" type="Dept">
+        <id column="dept_id" property="deptId"/>
+        <result column="dept_name" property="deptName"/>
+        <!-- ofType 表示集合中的类型 -->
+        <collection property="emps" ofType="Emp">
+            <id column="emp_id" property="empId"/>
+            <result column="emp_name" property="empName"/>
+        </collection>
+    </resultMap>
+    <select id="getDeptAndEmpsById" resultMap="deptAndEmpResultMap">
+        SELECT * FROM t_dept LEFT JOIN t_emp ON t_emp.dept_id = t_dept.`dept_id`
+        WHERE t_dept.dept_id = #{deptId}
+    </select>
+
+
+    <!-- 分步查询一对多 -->
+    <resultMap id="getDeptAndEmpsByStepRM" type="Dept">
+        <id column="dept_id" property="deptId"/>
+        <result column="dept_name" property="deptName"/>
+        <!-- fetchType="eager" 设置为立即加载，无视全局的懒加载配置 -->
+        <collection property="emps" column="dept_id" fetchType="lazy"
+                    select="com.xd.pl.mapper.EmpMapper.getEmpByDeptId">
+            <id column="emp_id" property="empId"/>
+            <result column="emp_name" property="empName"/>
+        </collection>
+    </resultMap>
+    <select id="getDeptAndEmpsByStep" resultMap="getDeptAndEmpsByStepRM">
+        select * from t_dept where dept_id = #{deptId}
+    </select>
+
+</mapper>

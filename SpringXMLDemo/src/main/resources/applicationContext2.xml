@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd"
+>
+
+    <!--
+        通过 context 命名空间的 property-placeholder 引入 properties 文件
+        引入后在字符串中用 ${key} 访问
+    -->
+    <context:property-placeholder location="jdbc.properties"/>
+
+    <bean name="datasource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!-- init-method 指定初始化方法，destroyMethod -->
+    <bean name="life1" class="com.xd.pl.pojo.Life"
+          init-method="initMethod" destroy-method="destroyMethod">
+        <property name="lid" value="1"/>
+    </bean>
+
+    <bean id="myBeanPostProcessor" class="com.xd.pl.process.MyBeanPostProcessor"/>
+
+    <!-- 当 FactoryBean 的实现类被配置为 bean 时，会将当前类中的 getObject() 所返回的对象交给 IOC 容器管理 -->
+    <bean id="teacherFactoryBean" class="com.xd.pl.factory.TeacherFactoryBean"/>
+</beans>

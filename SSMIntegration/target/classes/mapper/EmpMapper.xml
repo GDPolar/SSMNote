@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 与 mapper 文件全类名对应 -->
+<mapper namespace="com.xd.pl.mapper.EmpMapper">
+    <!-- 方法名与 id 对应   -->
+    <select id="selectEmpById" resultType="Emp">
+        select * from t_emp where emp_id = #{empId}
+    </select>
+
+    <!--
+        设置 resultMap 自定义映射处理
+        id 设置主键
+        result 设置普通列
+        connection 设置一对多
+        association 设置多对一
+    -->
+    <resultMap id="empRM" type="Emp">
+        <id column="emp_id" property="empId"/>
+        <result column="emp_name" property="empName"/>
+        <result column="dept_id" property="dept.deptId"/>
+        <result column="dept_name" property="dept.deptName"/>
+    </resultMap>
+    <select id="selectEmpById2" resultMap="empRM">
+        <!-- 注意 Dept 类要有无参构造，否则报错 -->
+        SELECT * FROM t_emp LEFT JOIN t_dept ON t_emp.dept_id = t_dept.`dept_id` WHERE emp_id = #{empId}
+    </select>
+
+    
+    <resultMap id="empAndDeptRM" type="Emp">
+        <id column="emp_id" property="empId"/>
+        <result column="emp_name" property="empName"/>
+        <!-- association 标签，property 为属性名，javaType 为类型 -->
+        <association property="dept" javaType="Dept"/>
+    </resultMap>
+    <select id="selectEmpById3" resultMap="empAndDeptRM">
+        <!-- 注意 Dept 类要有无参构造，否则报错 -->
+        SELECT * FROM t_emp LEFT JOIN t_dept ON t_emp.dept_id = t_dept.`dept_id` WHERE emp_id = #{empId}
+    </select>
+
+    <!-- 分步查询 -->
+    <resultMap id="empAndDeptRM2" type="Emp">
+        <id column="emp_id" property="empId"/>
+        <result column="emp_name" property="empName"/>
+        <!-- column 为传给下一个 SQL 的参数 -->
+        <!-- select 属性值为第二步对应的方法 -->
+        <association property="dept" column="dept_id"
+                     select="com.xd.pl.mapper.DeptMapper.getDeptById">
+            <id column="dept_id" property="deptId"/>
+            <result column="dept_name" property="deptName"/>
+        </association>
+    </resultMap>
+    <select id="getEmpAndDeptByStep" resultMap="empAndDeptRM2">
+        SELECT * FROM t_emp WHERE emp_id = #{empId}
+    </select>
+
+    <select id="getEmpByDeptId" resultType="Emp">
+        SELECT * FROM t_emp WHERE dept_id = #{deptId}
+    </select>
+</mapper>

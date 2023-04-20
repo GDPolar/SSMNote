@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <!--
+        configuration 标签中的子标签的顺序有要求：
+         properties, settings, typeAliases, typeHandlers,
+         objectFactory, objectWrapperFactory, reflectorFactory,
+         plugins, environments, databaseIdProvider, mappers
+    -->
+
+    <!-- 引入 properties 文件，用 ${key} 访问 value -->
+    <properties resource="jdbc.properties"/>
+
+    <settings>
+        <!-- 将数据库中带下划线的字段与 pojo 中驼峰命名的属性相对应 -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!-- 懒加载，节省资源 -->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+    
+    <!-- 为类起别名  -->
+    <typeAliases>
+        <!--
+            typerAlias 标签：为指定的类起别名
+            alias 为别名，不区分大小写。默认为 类名 -->
+
+        <!--
+            <typeAlias type="com.xd.pl.pojo.User"/>
+            等价于
+            <typeAlias type="com.xd.pl.pojo.User" alias="User"/>
+        -->
+
+        <!-- package 标签：设置指定包下的所有类的别名为默认的别名 -->
+        <package name="com.xd.pl.pojo"/>
+    </typeAliases>
+
+    <!-- 配置默认的数据库环境 -->
+    <environments default="development">
+        <!-- 定义一个数据库连接环境，id 不可重复 -->
+        <environment id="development">
+            <!--
+            设置事务管理：
+                JDBC（使用 JDBC 原生的管理方式），
+                MANAGED（被管理，如 Spring）。
+            默认值 JDBC
+            -->
+            <transactionManager type="JDBC"/>
+            <!-- 设置数据源：POOLED, UNPOOLED, JNDI -->
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+            </dataSource>
+        </environment>
+
+        <environment id="test">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql:///test?serverTimezone=UTC"/>
+                <property name="username" value="root"/>
+                <property name="password" value="1234"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--!!! 配置映射文件的位置!!!!!!!!!!!!这一步千万不要忘记-->
+    <mappers>
+        <!-- <mapper resource="mappers/UserMapper.xml"/> -->
+
+        <!-- 引入整个包的映射文件，要求映射文件的全路径与 mapper 接口的全类名一致
+             这样编译完成后映射文件与 mapper 接口就位于同一目录
+         -->
+        <package name="com.xd.pl.mapper"/>
+
+    </mappers>
+
+</configuration>

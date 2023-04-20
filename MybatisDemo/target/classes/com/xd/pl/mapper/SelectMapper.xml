@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 与 mapper 文件全类名对应 -->
+<mapper namespace="com.xd.pl.mapper.SelectMapper">
+    <!-- 方法名与 id 对应   -->
+    <select id="getUserById" resultType="User">
+        <!-- mapper 接口定义方法时通过 @param 注解定义了变量名称 -->
+        select * from t_user where id = #{id}
+    </select>
+
+    <select id="getUserByUsername" resultType="User">
+        select * from t_user where username = #{username}
+    </select>
+
+    <!-- 返回类型为 map 时，默认以字段名为 key -->
+    <!-- 值为空时，不会放入 map 作为结果返回 -->
+    <select id="getUserByUsernameToMap" resultType="map">
+        <!-- 例如：此处若 password 为空，则只返回 username 为 key 的键值对 -->
+        select username, password from t_user where username = #{username}
+    </select>
+
+    <select id="getAllUsersToMap1" resultType="map">
+        select * from t_user
+    </select>
+
+    <select id="getAllUsersToMap2" resultType="map">
+        select * from t_user
+    </select>
+
+    <select id="getAllUsers" resultType="User">
+        select * from t_user
+    </select>
+
+    <select id="countUsers" resultType="Integer">
+        select count(*) from t_user
+    </select>
+
+    <!-- 模糊查询 -->
+    <select id="likeSelect" resultType="User">
+        select * from t_user where username like '%${mohu}%'
+    </select>
+
+    <!--
+        useGeneratedKeys="true" 允许获取生成的自增主键
+        keyProperty 将生成的自增主键作为对象的某个属性返回
+    -->
+    <insert id="insertUserAndGetGeneratedKeys" useGeneratedKeys="true" keyProperty="id">
+        insert t_user values(#{username}, #{password}, #{id})
+    </insert>
+</mapper>

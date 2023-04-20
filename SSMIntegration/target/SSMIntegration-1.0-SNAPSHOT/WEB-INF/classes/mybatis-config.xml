@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <!--
+        configuration 标签中的子标签的顺序有要求：
+         properties, settings, typeAliases, typeHandlers,
+         objectFactory, objectWrapperFactory, reflectorFactory,
+         plugins, environments, databaseIdProvider, mappers
+    -->
+    <settings>
+        <!-- 将数据库中带下划线的字段与 pojo 中驼峰命名的属性相对应 -->
+        <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!-- 懒加载，节省资源 -->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="false"/>
+    </settings>
+
+    
+</configuration>

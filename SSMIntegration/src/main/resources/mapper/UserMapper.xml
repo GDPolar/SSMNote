@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 与 mapper 文件对应 -->
+<mapper namespace="com.xd.pl.mapper.UserMapper">
+    <!-- 方法名与 id 对应   -->
+    <insert id="insertUser1">
+        insert into t_user values("lisi", "222", 3)
+    </insert>
+
+    <update id="updateUser">
+        update t_user set username = "zhangsan" where id = "3"
+    </update>
+
+    <!--
+        resultType：查询结果要转化的 java 类型
+        resultMap：处理一对多或多对一的映射关系
+    -->
+    <!-- 字段名和属性名完全一致，直接用 resultType 就可以 -->
+    <!-- 此处使用了在 Mybatis 配置文件中的 typeAlias -->
+    <select id="getAllUsers" resultType="User">
+        select * from t_user
+    </select>
+
+    <!-- ${} 本质是字符串拼接，#{} 本质是占位符赋值  -->
+    <!--
+        只有一个参数时形参名字无所谓
+        多个参数时用 argX（从 0 开始）, paramX（从 1 开始）
+    -->
+    <select id="getUserByUsernameAndId" resultType="User" >
+        select * from t_user where username = '${arg0}' and id = #{param2}
+    </select>
+
+    <!-- 用 map 集合自定义参数名 -->
+    <select id="checkLogin" resultType="User">
+        select * from t_user
+        where username = #{usernameMM}
+        and password = #{passwordMM}
+        and id = #{idMM}
+    </select>
+
+    <!-- 参数为实体类类型的参数，直接用 #{} 或 ${} 访问属性名（通过 getter 和 setter 的名字获取） -->
+    <insert id="insertUser2">
+        insert t_user values(#{username}, #{password}, #{id})
+    </insert>
+
+    <!-- 在 mapper 中利用 @Param 注解的方式自定义 -->
+    <insert id="insertUser3">
+        insert t_user values(#{usernameAA}, #{passwordAA}, #{idAA})
+    </insert>
+
+</mapper>

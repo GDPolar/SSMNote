@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 与 mapper 文件全类名对应 -->
+<mapper namespace="com.xd.pl.mapper.CacheMapper">
+    <cache/>
+    <!-- 方法名与 id 对应   -->
+    <select id="getEmpById" resultType="Emp">
+        select * from t_emp where emp_id = #{empId}
+    </select>
+</mapper>
